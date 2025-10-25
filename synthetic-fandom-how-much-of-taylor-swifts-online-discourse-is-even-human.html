@@ -4,15 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Synthetic Fandom: How Much of Taylor Swift’s Online Discourse Is Even Human?</title>
-  <meta name="description" content="A short analysis of sentiment, verification, and synthetic amplification on X (Twitter) around Taylor Swift's recent release.">
+  <meta name="description" content="Newsroom Analysis">
   <style>
     :root{
-      --bg: #fff2f2;         /* page background */
+      --bg: #fff2f2;
       --card: #ffffff;
       --text: #222222;
       --muted: #6b6b6b;
-      --accent: #d62839;    /* warm red accent */
-      --accent-2: #f77f00;  /* warm orange for highlights */
+      --accent: #d62839;
+      --accent-2: #f77f00;
+      --soft: #fff4f4;
       --table-head: #fdecea;
       --shadow: 0 8px 24px rgba(15, 15, 15, 0.06);
       --radius: 10px;
@@ -54,7 +55,7 @@
     h2, h3, h4 { font-family: var(--sans); color: #222; margin: 1.25em 0 0.45em; }
     h2{ font-size:1.25rem; border-bottom: 3px solid rgba(214,40,57,0.06); padding-bottom: 8px; }
 
-    figure{ margin: 1.2em 0; text-align:center; background: transparent; padding: 10px; border-radius: 8px; }
+    figure{ margin: 1.2em 0; text-align:center; padding: 10px; border-radius: 8px; }
     img{ max-width:100%; height:auto; border-radius:6px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 8px 20px rgba(0,0,0,0.04); background: white; }
     figcaption{ margin-top:8px; color:var(--muted); font-size:0.92rem; font-style:italic; }
 
@@ -74,6 +75,8 @@
     .score.pos{ background: linear-gradient(90deg,#2ecc71,#27ae60); }
     .score.neg{ background: linear-gradient(90deg,#e63946,#c62828); }
     .score.neu{ background: #888f99; }
+
+    .meta{ color:var(--muted); font-size:0.9rem; margin-top:6px; }
 
     @media (max-width:800px){
       .container{ margin:20px; padding:18px; } h1{ font-size:1.5rem; } .badge{ display:none; } thead th, td{ font-size:0.9rem; padding:8px; }
@@ -106,22 +109,21 @@
       <p>Research suggests that emotional intensity, not authenticity, is often the primary driver of online engagement. A 2017 Pew Research Center analysis found that engagement with political figures online skews with the extremity of views: more highly ideological actors spark larger conversations and more fervent defenders and attackers. Those with more extreme takes online spark larger discussions under their posts and easily have the most staunch defenders and attackers.</p>
 
       <figure>
-        <img src="assets/engagement_vs_sentiment.png" alt="Engagement vs Sentiment Intensity — scatter" />
+        
+        <img src="assets/engagement_vs_sentiment.png" alt="Scatter plot: Engagement vs Sentiment Intensity" />
         <figcaption>Engagement vs Sentiment Intensity — higher emotional intensity (positive or negative) correlates with larger total engagement in the sample Twitter dataset.</figcaption>
       </figure>
 
       <p>A similar dynamic appears in music discourse. The tweets and posts that go viral tend to be those that express the most extreme emotional responses — fervent adoration or fierce disdain — regardless of whether those reactions come from verified or paid accounts, bots, or genuine users.</p>
 
-      <p>Since Elon Musk made the X verification badge purchasable, the blue checkmark no longer guarantees identity. Once a symbol of confirmed public figures, journalists, and institutions, the badge increasingly signals that an account pays for X Premium. Visibility can now be bought, and influence can be amplified artificially. As a result, it is harder to tell whether a viral opinion represents a genuine human reaction or a purchased boost.</p>
-
       <figure>
-        <img src="assets/sentiment_by_verification.png" alt="Sentiment Distribution by Verification Status — histogram" />
+        <img src="assets/sentiment_by_verification.png" alt="Histogram: Sentiment Distribution by Verification Status" />
         <figcaption>Sentiment distribution by verification status — verified accounts skew more positive while unverified accounts show a wider spread of sentiment in this Twitter sample.</figcaption>
       </figure>
 
       <p>The disparity in sentiment between verified and unverified accounts on the subject of Taylor’s new album is palpable. Verified users, representative of journalists, official fan accounts, and otherwise known internet denizens trend towards positive sentiment, while free user sentiment is decidedly neutral overall.</p>
 
-      <p><strong>queen of cups</strong>, an unverified X account comments, “I’ve listened to Taylor’s new album a couple of times now and I really like it. I’m not a huge swiftie but this is super easy listening and catchy.” The post has about 206 views, 9 likes, and 0 reposts.
+      <p><strong>queen of cups</strong>, an unverified X account comments, “I’ve listened to Taylor’s new album a couple of times now and I really like it. I’m not a huge swiftie but this is super easy listening and catchy.” The post has about 206 views, 9 likes, and 0 reposts.</p>
 
       <p><strong>Taylor Swift Updates</strong>, a verified X account comments, “A new Era is upon us</p>
       <blockquote>
@@ -131,7 +133,7 @@
         <p>This album slaps and yes obviously Wood is my favorite.</p>
         <p>Congrats, my friend. Thanks for putting me in a video and giving us all a much needed family reunion..</p>
       </blockquote>
-      <p>This post has about 390 thousand views, 11 thousand likes, and around 800 reposts. Enough to turn heads and change opinions, and quite honestly the difference between the attention the verified and unverified post gets is appalling, and unsurprising, and I would say that the unverified view is nice enough to not be overly positive, but still hover in the neutral side of opinions.
+      <p>This post has about 390 thousand views, 11 thousand likes, and around 800 reposts. Enough to turn heads and change opinions, and quite honestly the difference between the attention the verified and unverified post gets is appalling, and unsurprising, and I would say that the unverified view is nice enough to not be overly positive, but still hover in the neutral side of opinions.</p>
 
       <h3>Measuring polarization with sentiment analysis</h3>
 
@@ -226,8 +228,8 @@
       </section>
 
       <figure>
-        <img src="assets/distribution_sentiment.png" alt="Distribution of Sentiment Intensity — histogram + density" />
-        <figcaption>Distribution of Sentiment Intensity — histogram and density plot with the compound mean (0.199) marked.</figcaption>
+        <img src="assets/distribution_sentiment.png" alt="Density + Histogram: Distribution of Sentiment Intensity (mean marked)" />
+        <figcaption>Distribution of Sentiment Intensity — histogram and density plot with the compound mean (0.199) marked. Shows central tendency toward mild positivity but a wide spread.</figcaption>
       </figure>
 
       <h4>References</h4>
@@ -239,5 +241,7 @@
       </ul>
     </article>
   </div>
+
+
 </body>
 </html>
