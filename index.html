@@ -3,115 +3,255 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Newsroom-2 — Taylor Swift exploration</title>
-  <meta name="description" content="Newsroom-2: a data journalism project exploring Taylor Swift — pros and controversies." />
+  <title>Synthetic Fandom: How Much of Taylor Swift’s Online Discourse Is Even Human?</title>
+  <meta name="description" content="A short analysis of sentiment, verification, and synthetic amplification on X (Twitter).">
   <style>
-    :root{--bg:#fff;--text:#111;--muted:#666;--link:#1a73e8}
-    body{font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color:var(--text); margin:48px auto; max-width:960px; padding:0 18px; line-height:1.5}
-    header{margin-bottom:24px}
-    h1{margin:0 0 6px 0;font-size:32px}
-    .meta{color:var(--muted);font-size:14px}
-    nav{margin:18px 0}
-    nav a{margin-right:12px;color:var(--link);text-decoration:none}
-    section{margin:28px 0;padding:18px;border-radius:8px;background:#f8f9fb}
-    h2{margin-top:0}
-    pre,code{background:#f6f8fa;padding:8px;border-radius:6px;overflow:auto}
-    footer{margin-top:40px;color:var(--muted);font-size:13px}
-    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#eef6ff;color:var(--link);font-weight:600;font-size:13px}
-    /* simple container styling for interactive charts */
-    .chart-card{border:1px solid #e6eef8;border-radius:8px;padding:12px;background:white}
+    :root{
+      --bg: #fff2f2;
+      --card: #ffffff;
+      --text: #222222;
+      --muted: #6b6b6b;
+      --accent: #d62839;
+      --accent-2: #f77f00;
+      --soft: #fff4f4;
+      --table-head: #fdecea;
+      --shadow: 0 8px 24px rgba(15, 15, 15, 0.06);
+      --radius: 10px;
+      --max-width: 980px;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Helvetica Neue", Arial, sans-serif;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      background-color: var(--bg);
+      font-family: var(--serif);
+      color:var(--text);
+    }
+
+    .container{
+      max-width: var(--max-width);
+      margin: 40px auto;
+      padding: 28px;
+      background: linear-gradient(180deg, var(--card), #fff);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0,0,0,0.03);
+    }
+
+    header{ display:flex; align-items: center; gap:18px; margin-bottom:18px; }
+    .badge{
+      width:72px; height:72px; border-radius:12px;
+      background: linear-gradient(135deg, rgba(214,40,57,0.12), rgba(247,127,0,0.08));
+      display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--accent);
+      border: 1px solid rgba(214,40,57,0.08); box-shadow: 0 6px 18px rgba(214,40,57,0.06); font-family: var(--sans);
+    }
+
+    h1{ margin:0; font-family: var(--sans); font-size:1.9rem; color:var(--accent); letter-spacing: -0.5px; }
+    .subtitle{ margin-top:6px; color:var(--muted); font-size:0.95rem; font-family: var(--serif); }
+
+    article p{ margin:1em 0; font-size:1rem; line-height:1.65; }
+    h2, h3, h4 { font-family: var(--sans); color: #222; margin: 1.25em 0 0.45em; }
+    h2{ font-size:1.25rem; border-bottom: 3px solid rgba(214,40,57,0.06); padding-bottom: 8px; }
+
+    figure{ margin: 1.2em 0; text-align:center; padding: 10px; border-radius: 8px; }
+    img{ max-width:100%; height:auto; border-radius:6px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 8px 20px rgba(0,0,0,0.04); background: white; }
+    figcaption{ margin-top:8px; color:var(--muted); font-size:0.92rem; font-style:italic; }
+
+    .lead{ font-size:1.05rem; color:#333; }
+
+    blockquote{ margin:0.6em 0 1.2em; padding: 12px 16px; border-left: 4px solid var(--accent);
+      background: linear-gradient(90deg, rgba(214,40,57,0.03), rgba(247,127,0,0.01)); color:#222; border-radius:6px; }
+
+    table{ width:100%; border-collapse:collapse; margin:1em 0; font-size:0.95rem; }
+    caption.small { text-align:left; margin-bottom:6px; color:var(--muted); font-style:italic; }
+    th, td{ border:1px solid rgba(0,0,0,0.06); padding:10px 12px; vertical-align:top; }
+    thead th{ background: linear-gradient(180deg, var(--table-head), #fff); color: #7a1f2f; font-weight:700; }
+    tbody tr:nth-child(odd){ background: rgba(0,0,0,0.01); }
+    tbody td.small{ color:var(--muted); font-family: var(--sans); font-size:0.92rem; }
+
+    .score{ display:inline-block; padding:6px 8px; border-radius:6px; font-weight:700; color:white; font-family: var(--sans); font-size:0.9rem; }
+    .score.pos{ background: linear-gradient(90deg,#2ecc71,#27ae60); }
+    .score.neg{ background: linear-gradient(90deg,#e63946,#c62828); }
+    .score.neu{ background: #888f99; }
+
+    .meta{ color:var(--muted); font-size:0.9rem; margin-top:6px; }
+
+    @media (max-width:800px){
+      .container{ margin:20px; padding:18px; } h1{ font-size:1.5rem; } .badge{ display:none; } thead th, td{ font-size:0.9rem; padding:8px; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Newsroom-2</h1>
-    <div class="meta">Data journalism project: exploring Taylor Swift — her achievements, cultural impact, and controversies.</div>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#data">Data & Methods</a>
-      <a href="#findings">Findings</a>
-      <a href="#controversies">Controversies</a>
-      <a href="#sources">Sources</a>
-    </nav>
-  </header>
-
-  <main>
-    <section id="about">
-      <h2>About this project</h2>
-      <p>This repository contains a data journalism exploration of Taylor Swift's career, cultural influence, and the controversies that have surrounded her public life. Use this page as the landing point for your materials and articles.</p>
-      <p class="badge">Repository: behrenberg1-wq/Newsroom-2</p>
-    </section>
-
-    <section id="data">
-      <h2>Data & Methods</h2>
-      <p>Describe datasets, data sources, and analysis methods here. If you have CSVs, JSON, notebooks, or images in the repo, link to them from this section.</p>
-      <pre><code>// Example: link to a CSV file in the repo
-&lt;a href="data/taylor_sales.csv"&gt;data/taylor_sales.csv&lt;/a&gt;</code></pre>
-    </section>
-
-    <section id="findings">
-      <h2>Key Findings</h2>
-      <p>Summarize key insights from your analysis — for example, sales trends, streaming vs album sales, geographic patterns, or notable timeline events.</p>
-
-      <!-- Example interactive chart: replace with your real chart/container -->
-      <div class="chart-card" id="engagement-sentiment-card" aria-label="Engagement vs Sentiment Intensity (interactive)">
-        <div id="engagement-sentiment" style="width:100%;height:520px;"></div>
-        <div style="color:var(--muted);font-size:14px;margin-top:8px;">Figure 1 — Engagement vs Sentiment Intensity (interactive)</div>
+  <div class="container">
+    <header>
+      <div class="badge">SW</div>
+      <div>
+        <h1>Synthetic Fandom: How Much of Taylor Swift’s Online Discourse Is Even Human?</h1>
+        <div class="subtitle">A short analysis of sentiment, verification, and synthetic amplification on X (Twitter)</div>
       </div>
-    </section>
+    </header>
 
-    <section id="controversies">
-      <h2>Controversies & Context</h2>
-      <p>Contextualize controversies, include timelines, statements, and data-backed analysis. Keep a neutral, source-cited approach for journalistic rigor.</p>
-    </section>
+    <article>
+      <p class="lead">“Taylor Swift released a new album. Big whoop.” That is one prevailing response to the recent release of Taylor Swift’s The Life of a Showgirl. Another is extreme excitement. More often than not, the primary reactions you’ve seen are the ones you already agree with.</p>
 
-    <section id="sources">
-      <h2>Sources</h2>
+      <p>There is no question Taylor Swift stands alone at the pinnacle of contemporary pop stardom. In 2024 she concluded her record‑breaking, 149‑date Eras Tour, reportedly grossing over $2 billion in ticket sales and spawning both a companion book and a three‑hour concert film. Opinions on the quality of her music vary widely, but purely by the numbers, Swift’s success is impossible to understate.</p>
+
+      <p>The Beliebers of the blog‑centric internet past are the incredibly devoted Swifties of today. First mentioned by Taylor Swift herself in a 2012 VEVO interview and later filed for trademark in 2017, “Swifties” was added to the Oxford English Dictionary by 2023. It’s easy to see why many feel so close to Taylor: they quite literally grew up with her music. Swift’s “Eras,” which formed the narrative core of her tour, are more than marketing categories — they are widely applicable life stories that allow listeners to relate and to place their own experiences within a shared timeline. These bonds often transcend traditional consumerism and take on a post‑postmodern fan culture, described by outlets like The Guardian and The Wall Street Journal as “The Taylor Swift effect.”</p>
+
+      <p>The parasocial nature of the relationship between celebrity and fan amplifies this effect. As one Florida news piece puts it, “Anything Swift does takes the world by storm — from sold‑out concerts to a show‑stopping engagement. Every accomplishment of Swift’s feels like a win for her fandom.” Fans follow her closely and emotionally invest in her milestones; those feelings color how they react to and amplify news and art.</p>
+
+      <p>But online, not all attention is genuine. On platforms like X (formerly Twitter), visibility and engagement can be gamed. Positive and negative comments alike push posts to be seen by more people, and bot farms have made it easier than ever to manufacture scale. This raises a pressing question: how much of the discourse around Taylor Swift is authentically human, and why do the most extreme takes — on both ends — seem the loudest?</p>
+
+      <h2>Emotional intensity drives engagement</h2>
+
+      <p>Research suggests that emotional intensity, not authenticity, is often the primary driver of online engagement. A 2017 Pew Research Center analysis found that engagement with political figures online skews with the extremity of views: more highly ideological actors spark larger conversations and more fervent defenders and attackers. Those with more extreme takes online spark larger discussions under their posts and easily have the most staunch defenders and attackers.</p>
+
+      <figure>
+        <!-- Replace the src with your image file path or a data URI if embedding -->
+        <img src="assets/engagement_vs_sentiment.png" alt="Scatter plot: Engagement vs Sentiment Intensity" />
+        <figcaption>Engagement vs Sentiment Intensity — higher emotional intensity (positive or negative) correlates with larger total engagement in the sample Twitter dataset.</figcaption>
+      </figure>
+
+      <p>A similar dynamic appears in music discourse. The tweets and posts that go viral tend to be those that express the most extreme emotional responses — fervent adoration or fierce disdain — regardless of whether those reactions come from verified or paid accounts, bots, or genuine users.</p>
+
+      <figure>
+        <img src="assets/sentiment_by_verification.png" alt="Histogram: Sentiment Distribution by Verification Status" />
+        <figcaption>Sentiment distribution by verification status — verified accounts skew more positive while unverified accounts show a wider spread of sentiment in this Twitter sample.</figcaption>
+      </figure>
+
+      <p>The disparity in sentiment between verified and unverified accounts on the subject of Taylor’s new album is palpable. Verified users, representative of journalists, official fan accounts, and otherwise known internet denizens trend towards positive sentiment, while free user sentiment is decidedly neutral overall.</p>
+
+      <p><strong>queen of cups</strong>, an unverified X account comments, “I’ve listened to Taylor’s new album a couple of times now and I really like it. I’m not a huge swiftie but this is super easy listening and catchy.” The post has about 206 views, 9 likes, and 0 reposts.</p>
+
+      <p><strong>Taylor Swift Updates</strong>, a verified X account comments, “A new Era is upon us</p>
+      <blockquote>
+        <p>I am always surprised the first time I listen to a Taylor Swift album. Besides the obvious. I'm always carrying some assumptions, expectations, predictions. And they're almost always thwarted.</p>
+        <p>This feels so fresh, so transformed somehow. I'm sure we all have our theories about why. on a first listen it's slinky and bouncy, dancing by you in a hazy crowded room and looking back at you with a smile that slows time.</p>
+        <p>Save your instant reactions and hot takes; this one is going to take some time and study to unfold. That's an expectation that's always come to pass.</p>
+        <p>This album slaps and yes obviously Wood is my favorite.</p>
+        <p>Congrats, my friend. Thanks for putting me in a video and giving us all a much needed family reunion..</p>
+      </blockquote>
+      <p>This post has about 390 thousand views, 11 thousand likes, and around 800 reposts. Enough to turn heads and change opinions, and quite honestly the difference between the attention the verified and unverified post gets is appalling, and unsurprising, and I would say that the unverified view is nice enough to not be overly positive, but still hover in the neutral side of opinions.</p>
+
+      <h3>Measuring polarization with sentiment analysis</h3>
+
+      <p>By using the top 5 most negative, and positive tweets about Taylor Swift’s new album, we can observe a clear polarization in public sentiment regarding her lifestyle, music, and public image. The data suggests two extremely contrasting patterns in online discourse surrounding the pop star: one being overly-negative sharing harsh criticism and hatred of the fanbase, and the other being hyper-positive, which portrays an intense adoration towards Taylor and her fandom.</p>
+
+      <p>The tables use a NLTK Sentiment Analysis, which is a tool that allows us to represent the proportion of words in a phrase that express positivity and negativity. As the amount of emotional words increase in a phrase, the higher the score will be for that analyzed sentiment. The compound score is the combination of overall measured emotion being pulled from both emotional sentiment scores and combining them into a value between -1 (extremely negative) to +1 (extremely positive).</p>
+
+      <p>Looking at the “Top 5 Most Negative Tweets” surrounding Taylor Swift’s new album you will find an extreme negative compound score with the highest being -0.9786, and the lowest being -0.8573. With that being said if you look at the “Top 5 Most Positive Tweets” you will find they are overly positive with the highest score being 0.9738 and the lowest being 0.9313. Obviously this is a small sample size of positive and negative comments surrounding Taylor Swift, but you can see from this data alone just how polarizing of a public figure she truly is when looking at both ends of the spectrum.</p>
+
+      <p>These compound scores shown in the tables measure the polarization. When averaging across the full dataset, the overall compound score is 0.199, which indicates that online discussion surrounding Taylor Swift trends positively, however the emotional sentiment still varies drastically with much of the discourse still being on the lower end of positive.</p>
+
+      <section aria-labelledby="top-negative-tweets">
+        <h4 id="top-negative-tweets">Top 5 Most Negative Tweets</h4>
+        <table>
+          <caption class="small">Top 5 most negative tweets (VADER component scores shown).</caption>
+          <thead>
+            <tr>
+              <th style="width:68%;">Tweet</th>
+              <th style="width:16%;">Negative Score</th>
+              <th style="width:16%;">Compound Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Tale as old as time ... they hated Red, they hated 1989, they hated reputation, they hated folklore even ... They hated Tortured poets, And now people hate showgirl lmao https://t.co/ztxog0pips</td>
+              <td class="small">0.532</td>
+              <td class="small"><span class="score neg">-0.9786</span></td>
+            </tr>
+            <tr>
+              <td>Excuse me, @CNN, but you're literally a NEWS INSTITUTION, and you're actually posting this vile headline? What do you mean "finally"? This is disgusting and IRRESPONSIBLE. I'm in disbelief. Thankfully, all the top comments—ALL of them—defended Taylor. This app should take notes. https://t.co/RSchLZj0lz</td>
+              <td class="small">0.28</td>
+              <td class="small"><span class="score neg">-0.9283</span></td>
+            </tr>
+            <tr>
+              <td>i said taylor swift’s new album sucks and i didn't even get a single death threat from a swiftie. that's how bad it is.</td>
+              <td class="small">0.454</td>
+              <td class="small"><span class="score neg">-0.9231</span></td>
+            </tr>
+            <tr>
+              <td>This Taylor? I'm sorry but you're all pathetically stupid. Mine music video literally has her fantasizing about getting married and having kids. So shocking that that's what she wants now that she is in an adult and in a happy relationship with a partner who can handle pressure https://t.co/AYhP4w97j7</td>
+              <td class="small">0.261</td>
+              <td class="small"><span class="score neg">-0.8804</span></td>
+            </tr>
+            <tr>
+              <td>Taylor Swift not only breaking but demolishing so many records shows just how out of touch the Internet is from the real world. If The Life of a Showgirl was so hated, streams wouldn't be stable or rising every day. You can argue that variants did this but you can't stream those.</td>
+              <td class="small">0.172</td>
+              <td class="small"><span class="score neg">-0.8573</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section aria-labelledby="top-positive-tweets">
+        <h4 id="top-positive-tweets">Top 5 Most Positive Tweets</h4>
+        <table>
+          <caption class="small">Top 5 most positive tweets (VADER component scores shown).</caption>
+          <thead>
+            <tr>
+              <th style="width:68%;">Tweet</th>
+              <th style="width:16%;">Positive Score</th>
+              <th style="width:16%;">Compound Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Taylor Swift reveals Sabrina Carpenter, Tate McRae and Sombr are some of her favorite artists at the moment! “Sabrina Carpenter is one of my favorite artists. Tate McRae is amazing. Sombr's amazing, like there's so many artists that I enjoy listening to, so I'm supporting” https://t.co/eLRHlXJfdh</td>
+              <td class="small">0.393</td>
+              <td class="small"><span class="score pos">0.9738</span></td>
+            </tr>
+            <tr>
+              <td>No one gaf about the cassettes but me but omg she's so cute and sparkley and I love her welcome home https://t.co/JucH1txl5L</td>
+              <td class="small">0.448</td>
+              <td class="small"><span class="score pos">0.9477</span></td>
+            </tr>
+            <tr>
+              <td>I love folklore and I love the life of a showgirl. Yes it's possible to love them both. These 2 can co-exist.</td>
+              <td class="small">0.522</td>
+              <td class="small"><span class="score pos">0.9460</span></td>
+            </tr>
+            <tr>
+              <td>Taylor Swift on Selena Gomez getting married: “I got to see her be the most elegant, gorgeous, not only bride, but just vision that I’ve ever seen in my life. She deserves all of this happiness.” https://t.co/xjdNQ8a13c</td>
+              <td class="small">0.263</td>
+              <td class="small"><span class="score pos">0.9405</span></td>
+            </tr>
+            <tr>
+              <td>Travis celebrating Taylor and her success on New Heights: “I gotta go with one that's near and dear to my heart. Tay Tay, congratulations, you get my stamp of the week. That's right honey, you get it. She's having a world record release of The Life Of A Showgirl. Couldn't be” https://t.co/KgPjD0Kf0C</td>
+              <td class="small">0.228</td>
+              <td class="small"><span class="score pos">0.9313</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <figure>
+        <img src="assets/distribution_sentiment.png" alt="Density + Histogram: Distribution of Sentiment Intensity (mean marked)" />
+        <figcaption>Distribution of Sentiment Intensity — histogram and density plot with the compound mean (0.199) marked. Shows central tendency toward mild positivity but a wide spread.</figcaption>
+      </figure>
+
+      <h4>References</h4>
       <ul>
-        <li>Link to official music charts and sales reports</li>
-        <li>Media reports and primary documents</li>
-        <li>Datasets used for analysis</li>
+        <li><a href="https://www.theguardian.com/music/2023/may/10/rumours-of-a-taylor-swift-memoir-pushes-mysterious-untitled-us-book-up-charts">The Guardian — rumours of a Taylor Swift memoir</a></li>
+        <li><a href="https://www.wsj.com/style/fashion/taylor-swift-sells-out-clothes-brands-2dfb3652">Wall Street Journal — Taylor Swift sells out clothes, brands</a></li>
+        <li><a href="https://www.pewresearch.org/short-reads/2017/08/21/highly-ideological-members-of-congress-have-more-facebook-followers-than-moderates-do/">Pew Research Center — ideological members have more followers</a></li>
+        <li><a href="https://www.nbcmiami.com/news/local/taylor-swift-celebrities-parasocial-relationships/3684416/">NBC Miami — parasocial relationships</a></li>
       </ul>
-    </section>
-  </main>
+    </article>
+  </div>
 
-  <footer>
-    <p>View the repository on GitHub: <a href="https://github.com/behrenberg1-wq/Newsroom-2">behrenberg1-wq/Newsroom-2</a></p>
-    <p>To publish via GitHub Pages: add this file as index.html in the repo root and enable Pages in Settings → Pages (choose branch: main, folder: /).</p>
-  </footer>
-
-  <!-- Chart library (Plotly) -->
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-
-  <!-- Example chart script -->
-  <script>
-    // Quick test data — replace with your actual data source or generator
-    var trace = {
-      x: [1,2,3,4,5,6,7],
-      y: [10, 15, 13, 17, 22, 18, 25],
-      mode: 'markers+lines',
-      type: 'scatter',
-      marker: { color: '#1f77b4' },
-      name: 'Engagement'
-    };
-    var trace2 = {
-      x: [1,2,3,4,5,6,7],
-      y: [0.2, 0.4, 0.35, 0.5, 0.45, 0.55, 0.6],
-      yaxis: 'y2',
-      mode: 'lines+markers',
-      type: 'scatter',
-      marker: { color: '#ff7f0e' },
-      name: 'Sentiment intensity'
-    };
-    var layout = {
-      title: 'Engagement vs Sentiment Intensity (interactive)',
-      margin: { t: 40, l: 50, r: 50, b: 50 },
-      xaxis: { title: 'Time (example)' },
-      yaxis: { title: 'Engagement' },
-      yaxis2: { title: 'Sentiment intensity', overlaying: 'y', side: 'right' },
-      legend: { orientation: 'h' }
-    };
-    Plotly.newPlot('engagement-sentiment', [trace, trace2], layout, {responsive: true});
-  </script>
+  <!-- Helpful instructions for publishing:
+       1) Place this file at the repository root as index.html (or keep the long filename and link to it).
+       2) Add an "assets" folder at the repo root containing:
+          - assets/engagement_vs_sentiment.png
+          - assets/sentiment_by_verification.png
+          - assets/distribution_sentiment.png
+       3) Commit and push. To serve the page with GitHub Pages, go to:
+          Settings → Pages → Source: main (branch) / root and save. The site will appear at:
+          https://<your-username>.github.io/<repo-name>/
+       4) If you want a single-file version (images embedded as base64), tell me and I will embed them for you.
+  -->
 </body>
 </html>
