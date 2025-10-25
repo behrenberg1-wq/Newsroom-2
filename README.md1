@@ -1,0 +1,23 @@
+# How to produce a self-contained HTML with embedded images
+
+What you have:
+- embed_images.py  — Python script that will embed images into the template
+- index-template.html — HTML template with placeholders
+- assets/ (create this folder) — place the three PNGs here
+
+Required image filenames (place exactly these names in assets/):
+- assets/engagement_vs_sentiment.png
+- assets/sentiment_by_verification.png
+- assets/distribution_sentiment.png
+
+Steps:
+1. Create a folder and save the three files above inside it.
+2. Create an `assets/` subfolder and save the three PNG images from the chat into that folder using the exact filenames listed.
+3. Open a terminal in the folder and run:
+   - `python3 embed_images.py`
+4. The script will produce `index-embedded.html` in the same folder. Open that file in any browser — images will display inline.
+
+Notes:
+- The produced HTML may be large because the PNGs are encoded directly into the file.
+- If you don't have Python 3 installed, install it or ask me for an alternative (Node.js) script.
+- If you want, after you run the script you can paste the resulting HTML here and I can inspect or tweak anything else.
